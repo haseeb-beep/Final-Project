@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 const LoginPage = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     email: "",
     pass: "",
@@ -11,58 +13,61 @@ const LoginPage = ({ onLoginSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    const users = JSON.parse(localStorage.getItem("hm_users")) || [];
-
-    // ===================== SIGN UP =====================
-    if (isSignup) {
-      const exists = users.find(
-        (u) => u.email.toLowerCase() === formData.email.toLowerCase()
-      );
-
-      if (exists) {
-        alert("Error: This Username/Email is already taken!");
-        return;
-      }
-
-      const newUser = {
-        id: "u" + Date.now(),
-        name: formData.name,
-        email: formData.email,
-        pass: formData.pass,
-        role: formData.role,
-        history: "",
-        vitals: {},
-      };
-
-      users.push(newUser);
-      localStorage.setItem("hm_users", JSON.stringify(users));
-
-      alert("Account created successfully! You can now login.");
-      setIsSignup(false);
-      return;
-    }
-
-    // ===================== LOGIN (BACKEND) =====================
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.pass, // backend expects "password"
-        }),
-      });
+      if (isSignup) {
+        // ===================== SIGN UP (BACKEND) =====================
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.pass,
+            role: formData.role,
+          }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (data.ok) {
-        onLoginSuccess(data.user); // backend user
+        if (!res.ok) {
+          alert(data.message || "Registration failed");
+          return;
+        }
+
+        alert("Account created successfully! You can now login.");
+        setIsSignup(false);
       } else {
-        alert(data.message || "Invalid Username or Password!");
+        // ===================== LOGIN (BACKEND) =====================
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.pass,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.message || "Login failed");
+          return;
+        }
+
+        if (data.ok) {
+          console.log("LOGIN SUCCESS:", data.user);
+          onLoginSuccess(data.user);
+        } else {
+          alert(data.message || "Invalid email or password");
+        }
       }
     } catch (err) {
-      alert("Backend not reachable. Is server running on port 5000?");
+      console.error("AUTH ERROR:", err);
+      alert("Backend not reachable. Make sure backend is running.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -135,8 +140,11 @@ const LoginPage = ({ onLoginSuccess }) => {
             </div>
           )}
 
-          <button className="btn btn-teal w-100 mb-3 py-2 fw-bold">
-            {isSignup ? "Sign Up" : "Login"}
+          <button
+            className="btn btn-teal w-100 mb-3 py-2 fw-bold"
+            disabled={isLoading}
+          >
+            {isLoading ? "Please wait..." : isSignup ? "Sign Up" : "Login"}
           </button>
 
           <p className="text-center mb-0 small">
