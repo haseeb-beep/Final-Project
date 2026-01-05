@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 const Dashboard = ({ user, onUserUpdate }) => {
+  // Developed by abdulrehman-o3 - Dashboard Logic and State Management
   const [users, setUsers] = useState([]);
   const [appts, setAppts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -96,6 +97,8 @@ const Dashboard = ({ user, onUserUpdate }) => {
   };
 
   // PATIENT: BOOK APPT
+  // Developed by abdulrehman-o3 - Patient Booking Module
+  // Handles appointment booking logic and validation
   const handleBookAppointment = async (e) => {
     e.preventDefault();
     if (!bookingDoctorId || !bookingDateTime) return alert("Fill all fields");
@@ -136,6 +139,8 @@ const Dashboard = ({ user, onUserUpdate }) => {
   };
 
   // DOCTOR: DIAGNOSIS
+  // Developed by abdulrehman-o3 - Doctor Diagnosis Module
+  // Handles diagnosis form submission and record keeping
   const handleDiagnosis = async (e) => {
     e.preventDefault();
     if (!selectedAppt) return;
@@ -263,6 +268,7 @@ const Dashboard = ({ user, onUserUpdate }) => {
       )}
 
       {/* ---------------- DOCTOR VIEW ---------------- */}
+      {/* Developed by abdulrehman-o3 - Doctor Dashboard View */}
       {currentUser?.role === "doctor" && (
         <div className="row g-4">
           <div className="col-12">
@@ -345,6 +351,7 @@ const Dashboard = ({ user, onUserUpdate }) => {
       )}
 
       {/* ---------------- PATIENT VIEW ---------------- */}
+      {/* Developed by abdulrehman-o3 - Patient Dashboard View */}
       {currentUser?.role === "patient" && (
         <div className="row g-4">
           <div className="col-md-5">

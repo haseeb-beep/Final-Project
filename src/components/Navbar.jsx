@@ -2,6 +2,8 @@ import React from 'react';
 import logo from '../assets/logo1.png'; // This looks for your logo in assets
 
 const Navbar = ({ user, onLogout, onNavigate }) => {
+  // Developed by abdulrehman-o3 - Navbar Component Logic
+  // Handles navigation and responsive layout for the application
   return (
     <nav className="navbar navbar-expand-lg fixed-top shadow-sm bg-white">
       <div className="container">
@@ -9,7 +11,7 @@ const Navbar = ({ user, onLogout, onNavigate }) => {
           <img src={logo} alt="Logo" height="40" className="me-2" />
           <span className="fw-bold text-teal">HealthMate</span>
         </a>
-        
+
         <div className="ms-auto">
           {!user ? (
             <button className="btn btn-teal btn-sm" onClick={() => onNavigate('login')}>
