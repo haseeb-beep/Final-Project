@@ -22,6 +22,8 @@ const Dashboard = ({ user, onUserUpdate }) => {
   }, [users, user]);
 
   // ===================== API FETCH =====================
+  // Fetches initial data for users and appointments to populate the dashboard
+  // Handles loading states and error logging
   const fetchData = async () => {
     setLoading(true);
     try {
