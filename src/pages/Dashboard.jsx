@@ -187,6 +187,13 @@ const Dashboard = ({ user, onUserUpdate }) => {
       .sort((a, b) => (a.datetime > b.datetime ? -1 : 1));
   }, [appts, currentUser]);
 
+  const myPatientCompleted = useMemo(() => {
+    if (!currentUser?.id) return [];
+    return appts
+      .filter((a) => a.patId === currentUser.id && a.status === "Completed")
+      .sort((a, b) => (a.datetime > b.datetime ? -1 : 1));
+  }, [appts, currentUser]);
+
 
   return (
     <div className="container mt-5 pt-4">
@@ -351,13 +358,13 @@ const Dashboard = ({ user, onUserUpdate }) => {
             <div className="info-card bg-teal-gradient text-white p-4 rounded-4 shadow mb-4">
               <h5>My Latest Appointment Vitals</h5>
               {/* Simplified view: getting last appt record */}
-              {myDoctorCompleted.length > 0 && myDoctorCompleted[0].record ? (
+              {myPatientCompleted.length > 0 && myPatientCompleted[0].record ? (
                 <ul className="list-unstyled small mb-0">
-                  <li>BP: {myDoctorCompleted[0].record.bp}</li>
-                  <li>Heart Rate: {myDoctorCompleted[0].record.heartRate}</li>
-                  <li>Temp: {myDoctorCompleted[0].record.temp}</li>
-                  <li>Weight: {myDoctorCompleted[0].record.weight}</li>
-                  <li className="mt-2 text-white-50">Dr. {myDoctorCompleted[0].docName}</li>
+                  <li>BP: {myPatientCompleted[0].record.bp}</li>
+                  <li>Heart Rate: {myPatientCompleted[0].record.heartRate}</li>
+                  <li>Temp: {myPatientCompleted[0].record.temp}</li>
+                  <li>Weight: {myPatientCompleted[0].record.weight}</li>
+                  <li className="mt-2 text-white-50">Dr. {myPatientCompleted[0].docName}</li>
                 </ul>
               ) : <p>No records yet.</p>}
             </div>
