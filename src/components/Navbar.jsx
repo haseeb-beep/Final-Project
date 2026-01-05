@@ -4,6 +4,7 @@ import logo from '../assets/logo1.png'; // This looks for your logo in assets
 const Navbar = ({ user, onLogout, onNavigate }) => {
   // Developed by abdulrehman-o3 - Navbar Component Logic
   // Handles navigation and responsive layout for the application
+  // Uses Bootstrap classes for styling and responsive behavior
   return (
     <nav className="navbar navbar-expand-lg fixed-top shadow-sm bg-white">
       <div className="container">
